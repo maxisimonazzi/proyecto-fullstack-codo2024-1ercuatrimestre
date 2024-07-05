@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar producto</title>
+    <link rel="stylesheet" href="./static/css/estilos.css">
+</head>
+
+<body>
+    <div class="logo-centrado">
+        <img src="./static/imagenes/logo_Codo.jpg" alt="logo">
+    </div>
+    <h1>Agregar Productos al Inventario</h1><br>
+
+    <form id="formulario" enctype="multipart/form-data"> <!-- enctype="multipart/form-data" es necesario para enviar archivos al back. Se usa este para enviar datos y archivos -->
+
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="descripcion" name="descripcion" required><br>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required><br>
+
+        <label for="precio">Precio:</label>
+        <input type="number" step="0.01" id="precio" name="precio" required><br>
+
+        <label for="imagenProducto">Imagen del producto:</label>
+        <input type="file" id="imagenProducto" name="imagen">
+
+        <br><br>
+        <label for="proveedorProducto">Proveedor:</label>
+        <input type="text" id="proveedorProducto" name="proveedor">
+
+        <button type="submit">Agregar Producto</button>
+        <a href="index.html">Menu principal</a>
+    </form>
+
+    <script>
+
+        // const URL = "http://127.0.0.1:5000/" // Al subir al servidor, deberá utilizarse la siguiente ruta. USUARIO debe ser reemplazado por el nombre de usuario de Pythonanywhere
+
+        const URL = "https://maxisimonazzi.pythonanywhere.com/"
+
+
+        // Capturamos el evento de envío del formulario
+        document.getElementById('formulario').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evitamos que se envie el form 
+
+            var formData = new FormData(this);
+
+            // Realizamos la solicitud POST al servidor
+            fetch(URL + 'productos', { // fetcheamos a la URL con el método POST (usamos la variable URL definida antes para poder colocar despues solo el nombre del decorador de la ruta en el servidor, en este caso productos)
+                method: 'POST',
+                body: formData // Aquí enviamos formData. Dado que formData puede contener archivos, no se utiliza JSON.
+            })
+
+                //Después de realizar la solicitud POST, se utiliza el método then() para manejar la respuesta del servidor.
+                .then(function (response) {
+                    if (response.ok) {
+                        //Si la respuesta es exitosa, convierte los datos de la respuesta a formato JSON.
+                        return response.json();
+                    } else {
+                        // Si hubo un error, lanzar explícitamente una excepción
+                        // para ser "catcheada" más adelante
+                        throw new Error('Error al agregar el producto.');
+                    }
+                })
+
+                //Respuesta OK, muestra una alerta informando que el producto se agregó correctamente y limpia los campos del formulario para que puedan ser utilizados para un nuevo producto.
+                .then(function (data) {
+                    alert('Producto agregado correctamente.');
+                })
+
+                // En caso de error, mostramos una alerta con un mensaje de error.
+                .catch(function (error) {
+                    alert('Error al agregar el producto.');
+                })
+
+                // Limpiar el formulario en ambos casos (éxito o error)
+                .finally(function () {
+                    document.getElementById('descripcion').value = "";
+                    document.getElementById('cantidad').value = "";
+                    document.getElementById('precio').value = "";
+                    document.getElementById('imagenProducto').value = "";
+                    document.getElementById('proveedorProducto').value = "";
+                });
+        })
+    </script>
+</body>
+
+</html>
