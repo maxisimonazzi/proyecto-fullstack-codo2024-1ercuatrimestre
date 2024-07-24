@@ -22,7 +22,8 @@
           - [`DELETE` `/productos/<int:codigo>` `(Elimina el producto seleccionado)`](#delete-productosintcodigo-elimina-el-producto-seleccionado)
       - [Cerrando conexiones a la Base de datos](#cerrando-conexiones-a-la-base-de-datos)
       - [Usando API Key de PythonAnywhere para recargar el sitio](#usando-api-key-de-pythonanywhere-para-recargar-el-sitio)
-          - [`POST` `/api/v0/user/{tu_usuario}/webapps/{tu_dominio}/reload/` `(Recarga la pagina web.)`](#post-apiv0usertu_usuariowebappstu_dominioreload-recarga-la-pagina-web)
+          - [Endpoint](#endpoint)
+            - [`POST` `/api/v0/user/{tu_usuario}/webapps/{tu_dominio}/reload/` `(Recarga la pagina web.)`](#post-apiv0usertu_usuariowebappstu_dominioreload-recarga-la-pagina-web)
     - [FrontEnd](#frontend)
       - [index.html](#indexhtml)
       - [listado.html](#listadohtml)
@@ -281,6 +282,8 @@ Alli veremos que la clase Catalogo tiene dos metodos nuevos, uno llamado **`cone
 Muchas veces, la app alojada en PythonAnywhere deja de responder, ya sea por una limitacion de los recursos gratuitos o por que no se usa la implementacion de cerrar la conexion a la base de datos. En esas situaciones la pagina debe recargarse en PythonAnywhere haciendo click en el boton **`Reload`**. Esto implica tener que dirigirnos a la pagina, loguearnos y luego buscar el boton reload de forma manual, lo cual puede ser tedioso.
 
 Para solucionar esto, podemos realizar este procedimiento haciendo uso de la API de PythonAnywhere y hacer la recarga directamente desde una peticion.
+
+##### Endpoint
 
 <details>
 <summary>
