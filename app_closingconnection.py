@@ -23,21 +23,22 @@ CORS(app)  # Esto habilitará CORS para todas las rutas
 class Catalogo:
     #----------------------------------------------------------------
     # Constructor de la clase
-    def __init__(self, host, user, password, database):
+
+    def __init__(self):
         self.conn = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password
+            host=bd.host,
+            user=bd.user,
+            password=bd.password
         )
         self.cursor = self.conn.cursor()
         # Intentamos seleccionar la base de datos
         try:
-            self.cursor.execute(f"USE {database}")
+            self.cursor.execute(f"USE {bd.database}")
         except mysql.connector.Error as err:
             # Si la base de datos no existe, la creamos
             if err.errno == mysql.connector.errorcode.ER_BAD_DB_ERROR:
-                self.cursor.execute(f"CREATE DATABASE {database}")
-                self.conn.database = database
+                self.cursor.execute(f"CREATE DATABASE {bd.database}")
+                self.conn.database = bd.database
             else:
                 raise err
 
@@ -52,38 +53,84 @@ class Catalogo:
         
         # Cerrar el cursor inicial y abrir uno nuevo con el parámetro dictionary=True
         self.cursor.close()
-        self.cursor = self.conn.cursor(dictionary=True)
+        self.conn.close()
 
+    def conectar(self):
+        try:
+            self.conn = mysql.connector.connect(
+                host=bd.host,
+                user=bd.user,
+                password=bd.password,
+                database=bd.database
+            )
+            self.cursor = self.conn.cursor(dictionary=True)
+            return "OK"
+        except:
+            return "Error al conectar con la base de datos."
+        
+    def desconectar(self):
+        try:
+            self.cursor.close()
+            self.conn.close()
+            return "OK"
+        except:
+            return "Error al cerrar la conexión."
+        
     def listar_productos(self):
+        self.conectar()
         self.cursor.execute("SELECT * FROM productos")
         productos = self.cursor.fetchall()
+        self.desconectar()
         return productos
     
     def consultar_producto(self, codigo):
         # Consultamos un producto a partir de su código
+        self.conectar()
         self.cursor.execute(f"SELECT * FROM productos WHERE codigo = {codigo}")
+        self.desconectar()
         return self.cursor.fetchone()
 
+    def mostrar_producto(self, codigo):
+        # Mostramos los datos de un producto a partir de su código
+        producto = self.consultar_producto(codigo)
+        if producto:
+            print("-" * 40)
+            print(f"Código.....: {producto['codigo']}")
+            print(f"Descripción: {producto['descripcion']}")
+            print(f"Cantidad...: {producto['cantidad']}")
+            print(f"Precio.....: {producto['precio']}")
+            print(f"Imagen.....: {producto['imagen_url']}")
+            print(f"Proveedor..: {producto['proveedor']}")
+            print("-" * 40)
+        else:
+            print("Producto no encontrado.")
+
     def agregar_producto(self, descripcion, cantidad, precio, imagen, proveedor):
+        self.conectar()
         sql = "INSERT INTO productos (descripcion, cantidad, precio, imagen_url, proveedor) VALUES (%s, %s, %s, %s, %s)"
         valores = (descripcion, cantidad, precio, imagen, proveedor)
 
         self.cursor.execute(sql,valores)
         self.conn.commit()
+        self.desconectar()
         return self.cursor.lastrowid
 
     def modificar_producto(self, codigo, nueva_descripcion, nueva_cantidad, nuevo_precio, nueva_imagen, nuevo_proveedor):
+        self.conectar()
         sql = "UPDATE productos SET descripcion = %s, cantidad = %s, precio = %s, imagen_url = %s, proveedor = %s WHERE codigo = %s"
         valores = (nueva_descripcion, nueva_cantidad, nuevo_precio, nueva_imagen, nuevo_proveedor, codigo)
 
         self.cursor.execute(sql, valores)
         self.conn.commit()
+        self.desconectar()
         return self.cursor.rowcount > 0
 
     def eliminar_producto(self, codigo):
+        self.conectar()
         # Eliminamos un producto de la tabla a partir de su código
         self.cursor.execute(f"DELETE FROM productos WHERE codigo = {codigo}")
         self.conn.commit()
+        self.desconectar()
         return self.cursor.rowcount > 0
 
 #--------------------------------------------------------------------
@@ -91,7 +138,7 @@ class Catalogo:
 #--------------------------------------------------------------------
 # Crear una instancia de la clase Catalogo
 
-catalogo = Catalogo(host=bd.host, user=bd.user, password=bd.password, database=bd.database) 
+catalogo = Catalogo() 
 # las variables con los datos de la conexion estan guardadas en el archivo datosconexion.py
 
 
@@ -173,7 +220,7 @@ def modificar_producto(codigo):
     if catalogo.modificar_producto(codigo, nueva_descripcion, nueva_cantidad, nuevo_precio, nombre_imagen, nuevo_proveedor):
         return jsonify({"mensaje": "Producto modificado"}), 200
     else:
-        return jsonify({"mensaje": "Producto no encontrado"}), 404
+        return jsonify({"mensaje": "Producto no encontrado"}), 403
 
 @app.route("/productos/<int:codigo>", methods=["DELETE"])
 def eliminar_producto(codigo):
@@ -192,7 +239,6 @@ def eliminar_producto(codigo):
             return jsonify({"mensaje": "Error al eliminar el producto"}), 500
     else:
         return jsonify({"mensaje": "Producto no encontrado"}), 404
-
-
+    
 if __name__ == "__main__":
     app.run(debug=True)

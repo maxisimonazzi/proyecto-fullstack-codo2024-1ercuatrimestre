@@ -1,7 +1,10 @@
+# Datos de acceso a la Base de Datos
 host='host'
 user='user'
 password='pass'
 database='database'
 
-# colocar aqui los datos de conexion a la base de datos
-# luego renombrar el archivo a datosconexion.py
+# Credenciales API PythonAnywhere
+username = "xxxxxxx"
+api_token = "api_token"
+domain_name = "xxxxxxx.pythonanywhere.com"

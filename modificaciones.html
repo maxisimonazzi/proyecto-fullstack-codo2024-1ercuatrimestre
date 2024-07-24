@@ -56,9 +56,9 @@
         </div>
     </div>
     <script>
-        // const URL = "http://127.0.0.1:5000/" // Al subir al servidor, deberá utilizarse la siguiente ruta. USUARIO debe ser reemplazado por el nombre de usuario de Pythonanywhere
+        const URL = "http://127.0.0.1:5000/" // Al subir al servidor, deberá utilizarse la siguiente ruta. USUARIO debe ser reemplazado por el nombre de usuario de Pythonanywhere
 
-        const URL = "https://maxisimonazzi.pythonanywhere.com/"
+        //const URL = "https://maxisimonazzi.pythonanywhere.com/"
 
 
         // Al subir al servidor, deberá utilizarse la siguiente ruta. USUARIO debe ser reemplazado por el nombre de usuario de Pythonanywhere
@@ -116,10 +116,10 @@
                 const imagenActual = document.getElementById('imagen-actual');
                 if (imagen_url && !imagenSeleccionada) { // Verifica si imagen_url no está vacía y no se ha seleccionado una imagen
                     
-                    //imagenActual.src = './static/imagenes/' + imagen_url;                                  
+                    imagenActual.src = './static/imagenes/' + imagen_url;                                  
                     //Al subir al servidor, deberá utilizarse la siguiente ruta. USUARIO debe ser reemplazado por el nombre de usuario de Pythonanywhere
                     
-                    imagenActual.src = 'https://maxisimonazzi.pythonanywhere.com/static/imagenes/' + imagen_url;
+                    //imagenActual.src = 'https://maxisimonazzi.pythonanywhere.com/static/imagenes/' + imagen_url;
                     imagenActual.style.display = 'block'; // Muestra la imagen actual
                 } else {
                     imagenActual.style.display = 'none'; // Oculta la imagen si no hay URL
