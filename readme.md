@@ -85,7 +85,7 @@ git push -u origin main
 
 ## Configuración
 
-La app hace uso del archivo datosconexion.py para obtener las variables de conexion a la base de datos y la API de PythonAnywhere. En el repo vas a encontrar el archivo **`datosconexion-template.py`** que tiene la siguiente estructura
+La app hace uso del archivo **`datosconexion.py`** para obtener las variables de conexion a la base de datos y la API de PythonAnywhere. En el repo vas a encontrar el archivo **`datosconexion-template.py`** que tiene la siguiente estructura
 
 ```Python
 # Datos de acceso a la Base de Datos
@@ -353,7 +353,7 @@ Esta página web le permite al usuario obtener los detalles de un producto espec
 
 Esta página le permite al usuario obtener un listado de los productos, con la posibilidad de eliminarlos.
 
-![listadoEliminar.html](./static/imagenes/listadoEliminar.png)
+![listadoEliminar.html](./static/imagenes/listadoeliminar.png)
 
 Estos archivos html pueden ser subidos a cualquier hosting/servidor gratuito. En clases vimos el ejemplo de subirlo a Netlify.
 
